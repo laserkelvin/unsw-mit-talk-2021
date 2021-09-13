@@ -1,0 +1,687 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Chemistry in the Interstellar Medium</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/minimalist.css">
+		<link rel="stylesheet" href="dist/theme/skelet.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<article>
+						<x-grid columns=4 ai="end">
+							<x-col>
+								<h1 class="r-fit-text">Chemistry</h1>
+								<h4 style="opacity: 0.95" class="r-fit-text">in the</h1>
+								<h1 class="r-fit-text">Interstellar</h1>
+								<h1 class="r-fit-text">Medium</h1>
+							</x-col>
+							<x-col span=2+3>
+								<img src="assets/2-cyanonaphthalene.png">
+							</x-col>
+						</x-grid>
+						<footer style="padding-top: 2vw;">
+							<x-grid columns=3 ai="center">
+								<x-col><p>Kelvin Lee</p></x-col>
+								<x-col>
+									<figure class="logo"><img src="assets/mit-logo.png" alt=""></figure>
+								</x-col>
+								<x-col>
+									<figure class="logo"><img src="assets/cfa-logo-transparent.png" alt=""></figure>
+								</x-col>
+							</x-grid>
+						</footer>
+					</article>
+				</section>
+				<section>
+					<x-grid columns=3 ai="center">
+						<x-col>
+							<h1>TOC</h1>
+						</x-col>
+						<x-col span=2+2>
+							<ol>
+								<li>Introduction</li>
+								<li>The largest steerable object on land</li>
+								<li>Making space&mdash;in the lab</li>
+								<li>Driving discovery with machine learning</li>
+							</ol>
+						</x-col>
+					</x-grid>
+				</section>
+				<section>
+					<section>
+						<x-grid columns=5 ai="center">
+							<x-col>
+								<h1 data-id="text">Boston, MA</h1>
+								<x-grid columns=2 ai="center">
+									<x-col>
+									</x-col>
+									<x-col>
+									</x-col>
+								</x-grid>
+							</x-col>
+							<x-col span=3+3>
+								<img src="assets/cambridge_ma.svg" data-id="map">
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=5 ai="center">
+							<x-col>
+								<h1>Boston, MA</h1>
+								<x-grid columns=2 ai="center">
+									<x-col>
+										<img src="assets/goodwillhunting.jpg">
+									</x-col>
+									<x-col>
+										<img src="assets/bp2.jpeg">
+									</x-col>
+								</x-grid>
+							</x-col>
+							<x-col span=3+3>
+								<img src="assets/cambridge_ma.svg">
+							</x-col>
+						</x-grid>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>Introduction</h1>
+					</section>
+					<section>
+						<x-grid columns=6 ai="center">
+							<x-col span=1+1>
+								<h1>Astrochemistry</h1>
+								<hr>
+							</x-col>
+							<x-col span=2+5>
+								<p>Finding new molecules and inferring astrophysics from chemistry</p>
+								<p>From atoms to molecules&mdash;from galactic structure to star formation to biomolecules</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section data-background-iframe="https://www.youtube.com/embed/Q2mgpsTFuV8" data-background-interactive>
+						<!-- <iframe width="1920" height="2000" src="https://www.youtube.com/embed/Q2mgpsTFuV8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+					</section>
+					<section>
+						<x-grid columns=3 ai="center">
+							<x-col>
+								<figure>
+									<img class="grid-image" src="assets/CN.png" alt="">
+								</figure>
+							</x-col>
+							<x-col>
+								<figure>
+									<img class="grid-image" src="assets/silylcyanide.png" alt="">
+								</figure>
+							</x-col>
+							<x-col>
+								<figure><img class="grid-image" src="assets/CH3CHO.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure>
+									<img src="https://sos.noaa.gov/ftp_mirror/astronomy/wmap_microwave/third_year/media/thumbnail_big.jpg" alt="" class="grid-image">
+								</figure>
+							</x-col>
+							<x-col>
+								<figure>
+									<img class="grid-image" src="https://www.researchgate.net/profile/Chaitanya-Giri/publication/230849841/figure/fig2/AS:601661215105042@1520458620881/Optical-image-of-carbon-star-IRC-10216-taken-from-Focal-Reducer-and-low-dispersion.png">
+								</figure>
+							</x-col>
+							<x-col>
+								<figure>
+									<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/HL_Tau_protoplanetary_disk.jpg/800px-HL_Tau_protoplanetary_disk.jpg" alt="" class="grid-img">
+								</figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=2 ai="center">
+							<x-col>
+								<h1>How do we detect molecules?</h1>
+							</x-col>
+							<x-col>
+								<p>Vast majority done at radio frequencies: rotational motions of molecules</p>
+								<p>Transition frequencies correspond with distribution of mass; $A(BC) \propto \frac{1}{I_{a(bc)}}$</p>
+								<p>Transition strength proportional to permanent dipole moment, $\mu_{a(bc)}$</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=4 ai=center>
+							<x-col span=1+3>
+								<figure><img src="/assets/complex_mixture_separation.svg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<p>Isomer, Isotopic, Chiral* specificity for mixtures</p>
+								<p>Need extremely accurate and precise catalogs of transitions</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=2 ai="center">
+							<x-col>
+
+							</x-col>
+							<x-col>
+								<figure>
+									<img src="scripts/temperature-spectra.png" alt="" >
+								</figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<div>
+							<h1>Where are the aromatics?</h1>
+							<p>Ubiquitous in chemistry, but under-represented in space?</p>
+							<x-grid columns=2 ai=center>
+								<x-col>
+									<figure>
+										<img class="grid-image" src="/assets/Benzonitrile.png" alt="">
+										<figcaption>McGuire <em>et al.</em>, <em>Science</em> (2018)</figcaption>
+									</figure>
+								</x-col>
+								<x-col>
+									<ul>
+										<li>Lack of precise spectroscopic data</li>
+										<li>Small concentrations in space</li>
+										<li>Spectroscopically unfavorable (partition function, dipole moment)</li>
+										<li>Precursors to aromaticity</li>
+									</ul>
+								</x-col>
+							</x-grid>
+						</div>
+					</section>
+					<section>
+						<div>
+							<figure>
+								<img src="/assets/trinityt.svg" alt="" style="max-height: 30vw">
+							</figure>
+						</div>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>Laboratory</h1>
+						<h1>spectroscopy</h1>
+					</section>
+					<section>
+						<x-grid columns=2>
+							<x-col>
+								<figure><img src="/assets/NewSchemmatic_plain.svg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<ul>
+									<li>Need accurate <em>and</em> precise (~kHz) linelists to find molecules.</li>
+									<li>Fourier-transform microwave spectroscopy</li>
+									<li>Cavity and broadband chirped pulse operation</li>
+									<li>Chemistry via electrical discharge and/or laser ablation</li>
+								</ul>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=3 ai="center">
+							<x-col>
+								<h1>What can we study?</h1>
+							</x-col>
+							<x-col span=2+2>
+								<x-grid columns=3 ai="center">
+									<x-col>
+										<figure><img src="/assets/HCCSH.png" alt=""></figure>
+									</x-col>
+									<x-col>
+										<figure><img src="/assets/silylisocyanide.png" alt=""></figure>
+									</x-col>
+									<x-col><p>GeC$_6$</p></x-col>
+									<x-col>
+										<p>Discharge</p> 
+										<p>H<sub>2</sub>S + HCCH</p>
+									</x-col>
+									<x-col>
+										<p>Discharge</p>
+										<p>SiH<sub>4</sub> + CH<sub>3</sub>CN</p>
+									</x-col>
+									<x-col>
+										<p>Ablate</p>
+										<p>Ge + C target</p>
+									</x-col>
+								</x-grid>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=3 ai="center">
+							<x-col>
+								<h1>Broadband reaction assays</h1>
+							</x-col>
+							<x-col span=2+2>
+								<p>Let the alphabet letters float separate from the soup!</p>
+								<p>Electrical discharge of aromatic molecules destroy and create related species</p>
+								<figure><img src="assets/Benzene.png" alt="" style="max-width: 50%"></figure>
+								<p>Broadband discharge product detection over 2&ndash;18 GHz</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<div style="align-content: center">
+							<iframe src="assets/benzene-spectrum.html" style="width: 90%; height: 25vw; margin: 0 auto;"></iframe>
+						</div>
+					</section>
+					<section>
+						<x-grid columns=5 ai="center">
+							<x-col>
+								<h1>Automating analysis with open-source development</h1>
+							</x-col>
+							<x-col span=2+4>
+								<h2>PySpecTools</h2>
+								<x-grid columns=3 ai="center">
+									<x-col>
+										<p>Baseline and peak detection</p>
+									</x-col>
+									<x-col>
+										<p>Reproducible line analysis</p>
+									</x-col>
+									<x-col>
+										<p>Interactive report generation</p>
+									</x-col>
+								</x-grid>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<figure><img src="/assets/pst-workflow.svg" alt="" style="max-height: 30vw;"></figure>
+					</section>
+					<section>
+						<x-grid columns=6 ai="center">
+							<x-col span=1+2>
+								<figure>
+									<img src="https://pubs.acs.org/na101/home/literatum/publisher/achs/journals/content/jpclcd/2019/jpclcd.2019.10.issue-10/acs.jpclett.9b00586/20190514/images/medium/jz-2019-00586k_0004.gif" alt="">
+									<figcaption><small>Lee & McCarthy, <em>JPCL</em> 2019</small></figcaption>
+								</figure>
+							</x-col>
+							<x-col span=3+2>
+								<p>450 spectral features with SNR > 6</p>
+								<p>47 carriers identified in the mixture</p>
+								<p>9 new molecules not previously reported</p>
+							</x-col>
+							<x-col span=5+2>
+								<figure><img src="assets/new-hydrocarbons.jpeg" alt=""></figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=4 ai="center">
+							<x-col>
+								<h1>Laboratory discovery pipeline</h1>
+							</x-col>
+							<x-col span=2+3>
+								<ol>
+									<li>Acquire broadband spectrum</li>
+									<li>Assign known lines with PySpecTools</li>
+									<li>Perform assays on unidentified lines</li>
+									<li>Fit lines to effective Hamiltonian</li>
+									<li>Compare rotational constants to calculated library</li>
+								</ol>
+							</x-col>
+						</x-grid>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>Observational</h1>
+						<h1>astrochemistry</h1>
+					</section>
+					<section>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<p>We've got numbers to dial&mdash;now what?</p>
+							</x-col>
+							<x-col span=2+2>
+								<figure style="padding: 5px">
+									<img src="assets/gbt_image.jpg" alt="" style="max-width: 20vw">
+								</figure>
+								<figure style="padding: 5px">
+									<img src="assets/P1060153.JPG" alt="" style="max-width: 20vw">
+								</figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=4 ai=center>
+							<x-col span=1>
+								<h1>Understanding interstellar chemistry</h1>
+								<hr>
+								<p>Targeting line rich, quiet regions of space</p>
+							</x-col>
+							<x-col span=2+3>
+								<figure>
+									<img src="http://www.esa.int/var/esa/storage/images/esa_multimedia/images/2017/09/herschel_s_view_of_the_taurus_molecular_cloud/17161713-2-eng-GB/Herschel_s_view_of_the_Taurus_molecular_cloud_fullwidth.jpg" alt="" style="padding-left: 10px">
+									<figcaption>Taurus Molecular Cloud-1&mdash;ESA</figcaption>
+								</figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<figure><img src="/assets/Gotham_with_spectra_bam.png" alt=""></figure>
+						<p><b>G</b>BT <b>O</b>bservations of <b>T</b>MC-1: <b>H</b>unting <b>A</b>romatic <b>M</b>olecules</p>
+						<p>500+ hour large spectral line survey of TMC-1</p>
+						<p>High spectral resolution (1.4 kHz) · High sensitivity (~1 mK RMS)</p>
+					</section>
+					<section>
+						<x-grid columns=3>
+							<x-col>
+								<h1>Finding molecules in space</h1>
+							</x-col>
+							<x-col span=2+2>
+								<p>Use precisely measured laboratory catalog frequencies to identify lines in spectra</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<h1>Hunting big game</h1>
+								<hr>
+								<p>Large molecules suffer from partition function dilution</p>
+							</x-col>
+							<x-col>
+								<figure><img src="scripts/bn_sim_4K.png" alt=""></figure>
+								<figure><img src="scripts/cnn_sim_4K.png" alt="" style="padding-top: 50px"></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/1-cyanocpd.png" alt="" style="max-height: 10vw"></figure>
+								<figure><img src="/assets/2-cyanonaphthalene.png" alt=""></figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<h1>Spectral matched filtering</h1>
+							</x-col>
+							<x-col>
+
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<h1>Bayesian Filter Design</h1>
+								<hr>
+								<p>Infer molecular parameters given the observed spectra with Markov chain Monte Carlo</p>
+							</x-col>
+							<x-col>
+								<p>How likely is the molecule at 7 K? (versus 7.1?)</p>
+								<p>How likely is the molecule at $X$ abundance? (versus $Y$?)</p>
+							</x-col>
+							<x-col>
+								<p>Range of possible parameters consistent with the data</p>
+								<p>Encode chemical knowledge to priors on parameters</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<figure><img src="/assets/bayesian-workflow.svg" alt=""></figure>
+					</section>
+					<section>
+						<x-grid columns=4 ai="top">
+							<x-col>
+								<figure>
+									<img style="max-width: 10vw; height: auto" src="/assets/1-cyanocpd.png" alt="">
+									<figcaption>
+										<p class="r-fit-text">1/2-cyanocyclopentadiene</p>
+										<p>McCarthy <em>et al.</em>, <em>Nat. Astro.</em> 2021</p>
+										<p>Lee <em>et al.</em>, <em>Ap. J. Letters</em>, 2021a</p>
+									</figcaption>
+								</figure>
+							</x-col>
+							<x-col>
+								<figure>
+									<img style="max-width: 10vw; height: auto" src="/assets/indene.png" alt="">
+									<figcaption>
+										<p>Indene</p>
+										<p>Burkhardt <em>et al.</em>, <em>Ap. J. Letters</em>, 2021</p>
+									</figcaption>
+								</figure>
+							</x-col>
+							<x-col>
+								<figure>
+									<img style="max-width: 10vw; height: auto" src="/assets/2-cyanonaphthalene.png" alt="">
+									<figcaption>
+										<p class="r-fit-text">1/2-cyanonaphthalene</p>
+										<p>McGuire <em>et al.</em>, <em>Science</em>, 2021</p>
+									</figcaption>
+								</figure>
+							</x-col>
+							<x-col>
+								<figure>
+									<img style="max-width: 10vw; height: auto" src="/assets/trans-cva.png" alt="">
+									<figcaption>
+										<p class="r-fit-text">trans-(E)-cyanovinylacetylene</p>
+										<p>Lee <em>et al.</em>, <em>Ap. J. Letters</em>, 2021b</p>
+									</figcaption>
+								</figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<h1>Where to from now?</h1>
+							</x-col>
+						</x-grid>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>Machine Learning</h1>
+					</section>
+					<section>
+						<x-grid columns=2 ai=center>
+							<x-col>
+								<p>To date, astrochemistry has been largely reactionary</p>
+								<p>Unbiased reaction screening can help, but analysis is labour intensive</p>
+								<p>When you have many isomers to choose from, where do we go next?</p>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/gromit-vs-penguin.gif" alt=""></figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<h1>Embedding</h1>
+								<h1 style="margin-top: -20px; margin-bottom: 20px">Scaling</h1>
+								<h1>chemical intuition</h1>
+							</x-col>
+							<x-col span=2+2>
+								<x-grid columns=2 ai=top>
+									<x-col>
+										<figure><img src="assets/Benzene.png" alt=""></figure>
+									</x-col>
+									<x-col>
+										<figure><img src="assets/Benzonitrile.png" alt=""></figure>
+									</x-col>
+								</x-grid>
+								<p>Transferrable properties in a latent chemical space</p>
+								<p>Using machine learning to map molecules to vectors</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<h1>Natural Language</h1>
+								<h2>and</h2>
+								<h1>Chemistry</h1>
+							</x-col>
+							<x-col span=2+2>
+								<p>Encode structures as 1D SMILES strings</p>
+								<x-grid columns=3 ai=center>
+									<x-col>
+										<figure><img src="/assets/Benzene.png" alt=""></figure>
+									</x-col>
+									<x-col>
+										<p>$\rightarrow$</p>
+									</x-col>
+									<x-col>
+										<code>c1ccccc1</code>
+									</x-col>
+								</x-grid>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<h2>mol2vec slide</h2>
+					</section>
+					<section>
+						<p>Project 300 dimension</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<x-grid columns=6>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/mccarthy2016.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/mcguire2018.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/martindrumel.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/brandon.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/stephen.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/stanton.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/barnum_headshot.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/rLoomis.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/sthorwirth.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/jessie-new.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/a_burkhardt_0.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/gupta.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/bryan_changala.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="https://chemistry.ucdavis.edu/sites/g/files/dgvnsk196/files/styles/sf_profile/public/images/person/IMG_20200514_164827.jpg?h=d318f057&itok=Hty9iP8j" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/lattanzi.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="https://portal.ru.nl/profileservice/rest/1.0/profilephoto/735184?timestamp=1631539730&user=735184&hash=c663cfe684d8366289a1b5d80b729e86&secure=false" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/reilly.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure class="person-figure"><img src="/assets/people/schlemmer.jpg" alt=""></figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=4 ai="center">
+							<x-col span="row">
+								<h1>Acknowledgements</h1>
+							</x-col>
+							<x-col>
+								<figure>
+									<img src="assets/mit-logo.png" alt="">
+								</figure>
+							</x-col>
+							<x-col>
+								<figure><img src="assets/cfa-logo-transparent.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="assets/nasa.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="assets/nsf.png" alt=""></figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<h1>Thank you!</h1>
+						<x-grid columns=2 ai="center">
+							<x-col>
+								<p><i class="fa fa-github" style="font-size: 3em;"></i></p>
+							</x-col>
+							<x-col js="start">
+								<p><a href="https://laserkelvin.github.io">github.com/laserkelvin</a></p>
+							</x-col>
+							<x-col>
+								<p><i class="fa fa-twitter" style="font-size: 3em;"></i></p>
+							</x-col>
+							<x-col js="start">
+								<p><a href="https://twitter.com/cmmmsubmm">@cmmmsubmm</a></p>
+							</x-col>
+							<x-col>
+								<p><i class="fa ai ai-google-scholar" style="font-size: 3em;"></i></p>
+							</x-col>
+							<x-col js="start">
+								<p><a href="https://scholar.google.com/citations?hl=en&user=cB90fKUAAAAJ&view_op=list_works&sortby=pubdate">https://bit.ly/3l9Gl07</a></p>
+							</x-col>
+						</x-grid>
+					</section>
+			</div>
+		</div>
+
+		<script src="plugin/skelet/app.js"></script>
+		<script src="plugin/skelet/modules.js"></script>
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				slideNumber: true,
+				transition: 'fade',
+				transitionSpeed: 'slow',
+				controlsLayout: 'edges',
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath, RevealZoom ]
+			});
+		</script>
+	</body>
+	<footer>
+		<p>Huerrangklaemg</p>
+	</footer>
+</html>
