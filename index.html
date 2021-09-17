@@ -45,55 +45,19 @@
 					</article>
 				</section>
 				<section>
-					<x-grid columns=3 ai="center">
+					<x-grid columns=3 ai=center>
 						<x-col>
 							<h1>TOC</h1>
 						</x-col>
 						<x-col span=2+2>
 							<ol>
-								<li>Introduction</li>
-								<li>The largest steerable object on land</li>
-								<li>Making space&mdash;in the lab</li>
-								<li>Driving discovery with machine learning</li>
+								<li>Astro...chemistry?</li>
+								<li>Aromatic dynamite fishing in the laboratory</li>
+								<li>Interstellar molecule hunting</li>
+								<li>Replacing myself with a Raspberry Pi</li>
 							</ol>
 						</x-col>
 					</x-grid>
-				</section>
-				<section>
-					<section>
-						<x-grid columns=5 ai="center">
-							<x-col>
-								<h1 data-id="text">Boston, MA</h1>
-								<x-grid columns=2 ai="center">
-									<x-col>
-									</x-col>
-									<x-col>
-									</x-col>
-								</x-grid>
-							</x-col>
-							<x-col span=3+3>
-								<img src="assets/cambridge_ma.svg" data-id="map">
-							</x-col>
-						</x-grid>
-					</section>
-					<section>
-						<x-grid columns=5 ai="center">
-							<x-col>
-								<h1>Boston, MA</h1>
-								<x-grid columns=2 ai="center">
-									<x-col>
-										<img src="assets/goodwillhunting.jpg">
-									</x-col>
-									<x-col>
-										<img src="assets/bp2.jpeg">
-									</x-col>
-								</x-grid>
-							</x-col>
-							<x-col span=3+3>
-								<img src="assets/cambridge_ma.svg">
-							</x-col>
-						</x-grid>
-					</section>
 				</section>
 				<section>
 					<section>
@@ -111,8 +75,15 @@
 							</x-col>
 						</x-grid>
 					</section>
-					<section data-background-iframe="https://www.youtube.com/embed/Q2mgpsTFuV8" data-background-interactive>
-						<!-- <iframe width="1920" height="2000" src="https://www.youtube.com/embed/Q2mgpsTFuV8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+					<!-- <section data-background-iframe="https://www.youtube.com/embed/Q2mgpsTFuV8" data-background-interactive> -->
+					<section>
+						<x-grid columns=4 ai=center>
+							<x-col>
+								<p style="padding-right: 50px">Chemistry paints a dynamic picture of "empty space"</p>
+								<p style="padding-right: 50px">Tracking the velocity of neutral hydrogen</p>
+							</x-col>
+							<x-col span=2+3><iframe  src="https://www.youtube.com/embed/Q2mgpsTFuV8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="max-height: 30vw; width: 100%"></iframe></x-col>
+						</x-grid>
 					</section>
 					<section>
 						<x-grid columns=3 ai="center">
@@ -132,26 +103,43 @@
 							<x-col>
 								<figure>
 									<img src="https://sos.noaa.gov/ftp_mirror/astronomy/wmap_microwave/third_year/media/thumbnail_big.jpg" alt="" class="grid-image">
+									<figcaption>Cosmology</figcaption>
 								</figure>
 							</x-col>
 							<x-col>
 								<figure>
 									<img class="grid-image" src="https://www.researchgate.net/profile/Chaitanya-Giri/publication/230849841/figure/fig2/AS:601661215105042@1520458620881/Optical-image-of-carbon-star-IRC-10216-taken-from-Focal-Reducer-and-low-dispersion.png">
+									<figcaption>Stellar evolution</figcaption>
 								</figure>
 							</x-col>
 							<x-col>
 								<figure>
-									<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/HL_Tau_protoplanetary_disk.jpg/800px-HL_Tau_protoplanetary_disk.jpg" alt="" class="grid-img">
+									<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/HL_Tau_protoplanetary_disk.jpg/800px-HL_Tau_protoplanetary_disk.jpg" alt="" class="grid-image">
+									<figcaption>Planet formation</figcaption>
 								</figure>
 							</x-col>
 						</x-grid>
 					</section>
 					<section>
-						<div>
-							<figure>
-								<figure><img src="/assets/detections-by-year.svg" alt=""></figure>
-							</figure>
-						</div>
+						<x-grid columns=2 ai=center>
+							<x-col>
+								<figure>
+									<img src="/scripts/detections_plot.svg" alt="">
+								</figure>
+							</x-col>
+							<x-col>
+								<figure>
+									<img src="https://upload.wikimedia.org/wikipedia/commons/9/97/Water_infrared_absorption_coefficient_large.gif" alt="">
+								</figure>
+							</x-col>
+							<x-col>
+								<p>Radio frequencies from Hz to THz</p>
+								<p style="margin-top: -20px">(metres to microns)</p>
+							</x-col>
+							<x-col>
+								<p>Absorption by water vapor</p>
+							</x-col>
+						</x-grid>
 					</section>
 					<section>
 						<x-grid columns=2 ai="center">
@@ -159,9 +147,25 @@
 								<h1>How do we detect molecules?</h1>
 							</x-col>
 							<x-col>
-								<p>Vast majority done at radio frequencies: rotational motions of molecules</p>
+								<p>Vast majority done at radio frequencies: <b>rotational motions of molecules</b></p>
 								<p>Transition frequencies correspond with distribution of mass; $A(BC) \propto \frac{1}{I_{a(bc)}}$</p>
 								<p>Transition strength proportional to permanent dipole moment, $\mu_{a(bc)}$</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=4 ai="center">
+							<x-col>
+								<figure><img src="/assets/silylcyanide.png" alt="" class="grid-image"></figure>
+							</x-col>
+							<x-col span=2+3>
+								<figure><img src="/assets/prolate-top.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/Glycine.png" alt="" class="grid-image"></figure>
+							</x-col>
+							<x-col span=2+3>
+								<figure><img src="/assets/asymmetric-top.png" alt=""></figure>
 							</x-col>
 						</x-grid>
 					</section>
@@ -177,14 +181,15 @@
 						</x-grid>
 					</section>
 					<section>
-						<x-grid columns=2 ai="center">
+						<x-grid columns=2 ai=center>
 							<x-col>
-
+								<figure><img src="/assets/mcguire-2018-census.png" alt=""></figure>
 							</x-col>
 							<x-col>
-								<figure>
-									<img src="scripts/temperature-spectra.png" alt="" >
-								</figure>
+								<figure><img src="/assets/mcguire-census-2018-2.png" alt=""></figure>
+							</x-col>
+							<x-col span=row>
+								<p><small>McGuire 2018 Census of Interstellar Molecules</small></p>
 							</x-col>
 						</x-grid>
 					</section>
@@ -224,16 +229,22 @@
 						<h1>spectroscopy</h1>
 					</section>
 					<section>
-						<x-grid columns=2>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<ul>
+									<li>Need accurate <em>and</em> precise (~kHz) linelists to find molecules.</li>
+									<li>Fourier-transform microwave spectroscopy</li>
+								</ul>
+							</x-col>
 							<x-col>
 								<figure><img src="/assets/NewSchemmatic_plain.svg" alt=""></figure>
 							</x-col>
 							<x-col>
 								<ul>
-									<li>Need accurate <em>and</em> precise (~kHz) linelists to find molecules.</li>
-									<li>Fourier-transform microwave spectroscopy</li>
-									<li>Cavity and broadband chirped pulse operation</li>
 									<li>Chemistry via electrical discharge and/or laser ablation</li>
+									<li>Supersonic cooling; rotational temperatures of a few kelvin</li>
+									<li>Excite $\rightarrow$ FID $\rightarrow$ FFT</li>
+									<li>Cavity and broadband chirped pulse operation</li>
 								</ul>
 							</x-col>
 						</x-grid>
@@ -274,9 +285,10 @@
 								<h1>Broadband reaction assays</h1>
 							</x-col>
 							<x-col span=2+2>
-								<p>Let the alphabet letters float separate from the soup!</p>
-								<p>Electrical discharge of aromatic molecules destroy and create related species</p>
-								<figure><img src="assets/Benzene.png" alt="" style="max-width: 50%"></figure>
+								<p>Dynamite fishing for aromatic chemistry</p>
+								<figure style="padding: 20px">
+									<img src="assets/growth-vs-fragmentation.svg" alt="">
+								</figure>
 								<p>Broadband discharge product detection over 2&ndash;18 GHz</p>
 							</x-col>
 						</x-grid>
@@ -328,14 +340,38 @@
 							</x-col>
 						</x-grid>
 					</section>
+					<section data-background-iframe="/scripts/discharge-plots.html" data-preload>
+					</section>
 					<section>
-						<x-grid columns=4 ai="center">
+						<x-grid columns=3 ai=center>
 							<x-col>
-								<h1>Cookiecutter experiment</h1>
+								<h1>New -CN species</h1>
 								<hr>
-								<p>Extended to N<sub>2</sub> and O<sub>2</sub> mixtures</p>
+								<p>>3000 lines; 89% assigned</p>
+								<p>152 unique carriers, with 60 variants</p>
+								<p>~50 new molecules and revised spectroscopy</p>
+								<p>McCarthy <em>et al.</em> <em>JPCA</em> 2020</p>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/1-cyanocpd.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/trans-cva.png" alt=""></figure>
+							</x-col>
+							<x-col span=row>
+								<p>New molecules to target, and precise catalogs of frequencies</p>
 							</x-col>
 						</x-grid>
+					</section>
+					<section>
+						<p>Automation ties efficiency between data acquisition and analysis</p>
+						<p>Laboratory setting the candence for astrochemical discovery</p>
+						<div>
+							<figure>
+								<img src="/assets/tag-rigid-rotor-energy.png" alt="">
+								<figcaption><em>One day...™️</em></figcaption>
+							</figure>
+						</div>
 					</section>
 				</section>
 				<section>
@@ -363,7 +399,8 @@
 							<x-col span=1>
 								<h1>Understanding interstellar chemistry</h1>
 								<hr>
-								<p>Targeting line rich, quiet regions of space</p>
+								<p>Targeting chemically rich,</p>
+								<p style="margin-top: -20px">quiet regions of space</p>
 							</x-col>
 							<x-col span=2+3>
 								<figure>
@@ -380,12 +417,33 @@
 						<p>High spectral resolution (1.4 kHz) · High sensitivity (~1 mK RMS)</p>
 					</section>
 					<section>
-						<x-grid columns=3>
-							<x-col>
-								<h1>Finding molecules in space</h1>
+						<x-grid columns=3 ai=center>
+							<x-col span=row>
+								<figure>
+									<img src="/scripts/gotham-spectrum.png" alt="">
+								</figure>
 							</x-col>
-							<x-col span=2+2>
-								<p>Use precisely measured laboratory catalog frequencies to identify lines in spectra</p>
+							<x-col>
+								<figure><img src="/assets/C6H.png" alt="" style="max-height: 10vw;"></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/HC3N.png" alt="" style="max-height: 10vw;"></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/Ketene.png" alt="" style="max-height: 10vw;"></figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=2 ai=center>
+							<x-col>
+								<figure>
+									<img src="/assets/1-cyanocpd.png" alt="">
+									<figcaption>Evidence for 1-cyanocyclopentadiene?</figcaption>
+								</figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/weak-cyanocpd.png" alt=""></figure>
 							</x-col>
 						</x-grid>
 					</section>
@@ -404,15 +462,29 @@
 								<figure><img src="/assets/1-cyanocpd.png" alt="" style="max-height: 10vw"></figure>
 								<figure><img src="/assets/2-cyanonaphthalene.png" alt=""></figure>
 							</x-col>
+							<x-col span=row>
+								<p>Velocity stacking + Bayesian matched filtering to improve signal retrieval</p>
+							</x-col>
 						</x-grid>
 					</section>
 					<section>
 						<x-grid columns=3 ai=center>
 							<x-col>
-								<h1>Spectral matched filtering</h1>
+								<h1>Velocity stacking</h1>
+								<hr>
+								<p>Weighted sum of spectra:</p>
+								<p>For each transition,</p>
+								<p style="margin-top: -20px">weight by predicted intensity and noise RMS</p>
 							</x-col>
 							<x-col>
-
+								<figure><img src="/scripts/signal-under-noise.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure>
+									<video controls=1>
+										<source data-src="/scripts/time_animation.mp4" type="video/mp4" />
+									</video>
+								</figure>
 							</x-col>
 						</x-grid>
 					</section>
@@ -435,6 +507,33 @@
 					</section>
 					<section>
 						<figure><img src="/assets/bayesian-workflow.svg" alt=""></figure>
+					</section>
+					<section>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<figure><img src="/assets/1-cyanocpd.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/weak-cyanocpd.png" alt="">
+								</figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/cyanocpd-stack.png" alt=""></figure>
+							</x-col>
+							<x-col span=row>
+								<p>Matched filter response corresponds to detection significance</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=4 ai=center>
+							<x-col>
+								<p>Molecule parameter estimation</p>
+							</x-col>
+							<x-col span=2+3>
+								<figure><img src="/assets/indene_cornerplot.png" alt="" style="max-height: 30vw;"></figure>
+							</x-col>
+						</x-grid>
 					</section>
 					<section>
 						<x-grid columns=4 ai="top">
@@ -511,11 +610,10 @@
 						<x-grid columns=2 ai=center>
 							<x-col>
 								<p>To date, astrochemistry has been largely reactionary</p>
-								<p>Unbiased reaction screening can help, but analysis is labour intensive</p>
-								<p>When you have many isomers to choose from, where do we go next?</p>
+								<p>How do we make informed decisions on what comes next?</p>
 							</x-col>
 							<x-col>
-								<figure><img src="/assets/gromit-vs-penguin.gif" alt=""></figure>
+								<figure><img src="/assets/models-vs-tmc1.gif" alt=""></figure>
 							</x-col>
 						</x-grid>
 					</section>
@@ -535,8 +633,27 @@
 										<figure><img src="assets/Benzonitrile.png" alt=""></figure>
 									</x-col>
 								</x-grid>
-								<p>Transferrable properties in a latent chemical space</p>
+								<p>Continuous properties in a latent chemical space</p>
 								<p>Using machine learning to map molecules to vectors</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<h1>Natural Language</h1>
+								<h2>and</h2>
+								<h1>Chemistry</h1>
+							</x-col>
+							<x-col>
+								<p>Paris $-$ France</p> 
+								<p>$\approx$</p>
+								<p>Tokyo $-$ Japan</p>
+							</x-col>
+							<x-col>
+								<p>Benzonitrile $-$ CN</p>
+								<p>$\approx$</p>
+								<p>Benzene $-$ H </p>
 							</x-col>
 						</x-grid>
 					</section>
@@ -564,10 +681,111 @@
 						</x-grid>
 					</section>
 					<section>
-						<h2>mol2vec slide</h2>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<h1>Natural Language</h1>
+								<h2>and</h2>
+								<h1>Chemistry</h1>
+							</x-col>
+							<x-col span=2+2>
+								<p>SMILES to fingerprints</p>
+								<figure>
+									<img src="/assets/morgan-fingerprints.png" alt="">
+									<figcaption>Jaeger <em>et al.</em> <em>JCIM</em> 2018</figcaption>
+								</figure>
+							</x-col>
+						</x-grid>
 					</section>
 					<section>
-						<p>Project 300 dimension</p>
+						<x-grid columns=3 ai=center>
+							<x-col>
+								<h1>Natural Language</h1>
+								<h2>and</h2>
+								<h1>Chemistry</h1>
+							</x-col>
+							<x-col span=2+2>
+								<figure>
+									<img src="/assets/mol2vec.svg" alt="">
+									<figcaption>Map substructures to 300-D vectors</figcaption>
+									<p>Trained on 3.3 million SMILES strings</p>
+								</figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=4 ai=center>
+							<x-col>
+								<h2>Molecule recommendations</h2>
+								<h2 style="margin-top: 50px">Abundance prediction</h2>
+							</x-col>
+							<x-col span=2+3>
+								<figure>
+									<img src="/assets/neighbors.svg" alt="" style="max-width: 25vw;">
+									<figcaption><em>As simple as nearest neighbors</em></figcaption>
+								</figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=2 ai=center>
+							<x-col>
+								<h1>Application to TMC-1</h1>
+								<hr>
+								<p>Lee <em>et al.</em> <em>Ap. J. Letters</em> 2021c</p>
+							</x-col>
+							<x-col>
+								<p>Given a 86 known molecules, infer:</p>
+								<ul>
+									<li>Likely candidates for detection</li>
+									<li>Abundance of new molecules</li>
+									<li>Abundance of "invisible" molecules</li>
+									<li>Physical properties (e.g. temperature)</li>
+								</ul>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=2 ai=center>
+							<x-col>
+								<figure>
+									<img src="/assets/recommendations.png" alt="">
+								</figure>
+							</x-col>
+							<x-col>
+								<figure>
+									<img src="/assets/umda-vs-model.png" alt="">
+								</figure>
+							</x-col>
+							<x-col>
+								<p>Nearest-neighbor queries in chemical space</p>
+							</x-col>
+							<x-col>
+								<p>Better reproduction of abundances than chemical models</p>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=2 ai=center>
+							<x-col>
+								<figure><img src="https://github.com/laserkelvin/umda/raw/master/project-image.png" alt=""></figure>
+							</x-col>
+							<x-col>
+								<p>Identified 1500 candidates, with predicted abundances to prioritize</p>
+								<p>Inform modeling, computational, laboratory, and observational efforts</p>
+								<p>Towards data-driven astrochemistry</p>
+								<p>Lots of possibilities with machine chemical intuition!</p>
+							</x-col>
+						</x-grid>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>Conclusions</h1>
+						<hr>
+						<p>Fruitful avenues combining laboratory spectroscopy, observations, and machine learning</p>
+						<p>New tools for understanding the role of aromaticity in astrophysics</p>
+						<p><em>Still lots of open questions:</em></p>
+						<p>Where are the heterocycles? · Are aromatics formed at low temperature?</p>
 					</section>
 				</section>
 				<section>
@@ -626,6 +844,22 @@
 							</x-col>
 							<x-col>
 								<figure class="person-figure"><img src="/assets/people/schlemmer.jpg" alt=""></figure>
+							</x-col>
+						</x-grid>
+					</section>
+					<section>
+						<x-grid columns=2 ai=center>
+							<x-col>
+								<figure><img src="/assets/people/group2017.JPG" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/people/group2018.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/people/isms_2019.jpg" alt=""></figure>
+							</x-col>
+							<x-col>
+								<figure><img src="/assets/people/gotham_2019_photo.jpg" alt=""></figure>
 							</x-col>
 						</x-grid>
 					</section>

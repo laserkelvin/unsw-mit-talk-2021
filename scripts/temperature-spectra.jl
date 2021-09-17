@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.15.1
+# v0.16.0
 
 using Markdown
 using InteractiveUtils
@@ -7,7 +7,7 @@ using InteractiveUtils
 # ╔═╡ 37bc8628-10a5-11ec-251f-79aa0385d8a7
 begin
 	using DataFrames, CSV, CairoMakie, DataFramesMeta, MathTeXEngine
-	using Random, Distributions, PlotlyJS, StatsBase
+	using Random, Distributions, StatsBase, Interpolations
 end
 
 # ╔═╡ 7f262651-60ea-4d41-9140-59e7705c9a8a
@@ -94,7 +94,7 @@ begin
 end
 
 # ╔═╡ b27c2aa6-6fc7-42ae-a3f9-c4506b459c31
-catalog = Gaussian.(big_df.Position, 2., big_df.Intensity);
+catalog = Gaussian.(big_df.Position, 0.1, big_df.Intensity);
 
 # ╔═╡ 83626e13-14a0-4564-a4f2-3048e0d3c835
 begin
@@ -104,40 +104,160 @@ begin
 end
 
 # ╔═╡ 996ee20e-aac0-4a9c-a121-a1c22bd44092
-x = range(0., 1e5; length=100000)
+x = range(1e4, 3e4; step=0.01)
 
-# ╔═╡ a74b40e3-155d-492c-b034-ccf92f089c90
+# ╔═╡ c7bc1e03-015b-466f-8fb6-f4ac1b9e48ff
+length(x)
+
+# ╔═╡ dff4d682-6b8a-407e-9af4-b6d78a383ffc
 begin
-	y = zero(x)
-	for i ∈ 1:length(x)
-		y[i] = simulate(catalog, x[i])
+	function make_spectrum(x, noise_scale=1e-4)
+		y = simulate.(Ref(catalog), x)
+		noisy_y = y .+ rand(Normal(0., noise_scale), length(x))
+		return y, noisy_y
 	end
 end
+
+# ╔═╡ a74b40e3-155d-492c-b034-ccf92f089c90
+y, noisy_y = make_spectrum(x, 1e-4);
 
 # ╔═╡ ee5dd544-44aa-47f9-b8c8-c1eba9c3f49f
 begin
 	noisy_fig = Figure()
 	noisy_ax = Axis(noisy_fig[1,1], xlabel="Frequency / MHz", ylabel="Intensity")
-	
-	noisy_y = y .+ rand(Normal(0., 1e-3), length(x))
 	lines!(x, noisy_y)
-	lines!(x, y .* 10, alpha=0.3)
-	xlims!(noisy_ax, 5e3, 2e4)
-	noisy_ax.xticks = [5e3, 1e4, 1.5e4]
+	lines!(x, y, alpha=0.3)
+	# xlims!(noisy_ax, 5e3, 2e4)
+	# noisy_ax.xticks = [5e3, 1e4, 1.5e4]
 	hidespines!(noisy_ax, :t, :r)
 end
 
 # ╔═╡ f3715524-4be0-4108-994b-70dbe4062ae1
 noisy_fig
 
+# ╔═╡ 646f9fa3-f59d-466e-90fa-bc3e880a02a7
+save("signal-under-noise.png", noisy_fig)
+
 # ╔═╡ 0183a194-b1e0-4807-8fd0-1425e23a98d4
 begin 
-	lags = -500:500
+	lags = -800:800
 	xcor = crosscor(y, noisy_y, lags);
 end
 
 # ╔═╡ 4946022c-c436-4571-88b9-3ece72e8d054
 lines(lags, xcor)
+
+# ╔═╡ 58417bc5-7f4a-4c13-8617-b15c89c42996
+begin
+	ckm = 299792458 / 1e3
+	
+	"""
+	Calculate the equivalent velocity shift based on a
+	VLSR and a center frequency.
+	"""
+	function doppler_frequency(ν, Δv)
+		abs((ν * Δv) / (ckm * 2 * log(2)))
+	end
+
+	
+	function ν2vlsr(ν, center_ν)
+		(ν - center_ν) * ckm / center_ν
+	end
+	
+	function findnearest(a,x)
+       length(a) > 0 || return 0:-1
+       r = searchsorted(a,x)
+       length(r) > 0 && return r
+       last(r) < 1 && return searchsorted(a,a[first(r)])
+       first(r) > length(a) && return searchsorted(a,a[last(r)])
+       x-a[last(r)] < a[first(r)]-x && return searchsorted(a,a[last(r)])
+       x-a[last(r)] > a[first(r)]-x && return searchsorted(a,a[first(r)])
+       return first(searchsorted(a,a[last(r)])):last(searchsorted(a,a[first(r)]))
+	end
+	
+	mutable struct StackChunk
+		velocity
+		intensity
+		weight
+	end
+	
+	function StackChunk(center_ν, ν, I, weight, Δv)
+		Δν = doppler_frequency(center_ν, Δv)
+		indices = [findnearest(ν, center_ν + offset)[1] for offset in (-Δν, Δν)]
+		@views velocity = ν2vlsr.(ν[indices[1]:indices[2]], center_ν)
+		@views chunk_int = I[indices[1]:indices[2]]
+		# interpolate the velocity and intensity to common
+		common_velocity = -Δv:0.001:Δv
+		interp_int = LinearInterpolation(velocity, chunk_int, extrapolation_bc=missing).(common_velocity)
+		return StackChunk(common_velocity, interp_int, weight)
+	end
+end
+
+# ╔═╡ e293665c-28e5-454f-acaf-f60becac170e
+# use only entries that overlap with our frequency range
+select_df = filter(j -> minimum(x) <= j.Position <= maximum(x), big_df)
+
+# ╔═╡ 2642933d-6694-4aa5-9115-87fb8e6ea95a
+begin
+	# normalize intensity and sort the dataframe
+	select_df[!, :norm] = select_df.Intensity ./ maximum(select_df.Intensity)
+	sort!(select_df, :norm, rev=true)
+end
+
+# ╔═╡ 9f6fbac8-ac64-492b-8056-363cb5b54e89
+begin
+	chunks = [];
+	for row in eachrow(select_df)
+		push!(chunks, StackChunk(row.Position, x, noisy_y, row.norm, 40.))
+	end
+end
+
+# ╔═╡ 7216aa88-9d78-4f93-83bd-2be7c869dc6d
+begin 
+	function velocity_stack(chunks)
+		stacked_int = sum(hcat([chunk.intensity .* chunk.weight for chunk in chunks]...), dims=2)[1:end,1]
+		StackChunk(chunks[1].velocity, stacked_int, 1.)
+	end
+end
+
+# ╔═╡ 6805f505-e96c-4626-b711-f9cee8b79fbf
+stack = velocity_stack(chunks[1:2])
+
+# ╔═╡ 21557297-2cef-41d8-92d5-664c8c6838d9
+begin
+	function plot(chunk::StackChunk)
+		lines(chunk.velocity, chunk.intensity)
+	end
+end
+
+# ╔═╡ a0732466-545a-485f-ba2e-34fe1c4f88e5
+plot(stack)
+
+# ╔═╡ 4443eb49-cebc-42eb-bba5-0b7236bf2d09
+md"""# Stack animation
+"""
+
+# ╔═╡ 53635928-b5c0-4ce6-a5a5-a3c4b2d90a48
+stack_iterator = i -> velocity_stack(chunks[1:i])
+
+# ╔═╡ 0a2e57eb-d882-406c-94a7-86f04b0ceec2
+begin
+	time = Node(1)
+
+	trace = @lift(stack_iterator(floor($time)).intensity)
+	
+	anim_fig = lines(chunks[1].velocity, trace,
+    axis = (title = @lift("Num. lines = $(floor($time))"),), xlabel="Offset frequency / MHz", ylabel="Intensity")
+
+	framerate = 30
+	timestamps = range(1, 100, step=1/(framerate÷2))
+
+	record(anim_fig, "time_animation.mp4", timestamps;
+			framerate = framerate) do t
+		time[] = floor(t)
+		ylims!(high=0.02)
+	end
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -147,8 +267,8 @@ CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 DataFramesMeta = "1313f7d8-7da2-5740-9ea0-a2ca25f37964"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
 MathTeXEngine = "0a4f8689-d25c-4efe-a92b-7142dfc1aa53"
-PlotlyJS = "f0f68f2c-4968-5e81-91da-67840de0976a"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
@@ -158,8 +278,8 @@ CairoMakie = "~0.5.10"
 DataFrames = "~1.2.2"
 DataFramesMeta = "~0.9.0"
 Distributions = "~0.25.16"
+Interpolations = "~0.13.4"
 MathTeXEngine = "~0.1.2"
-PlotlyJS = "~0.18.7"
 StatsBase = "~0.33.10"
 """
 
@@ -202,12 +322,6 @@ version = "3.1.31"
 [[Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 
-[[AssetRegistry]]
-deps = ["Distributed", "JSON", "Pidfile", "SHA", "Test"]
-git-tree-sha1 = "b25e88db7944f98789130d7b503276bc34bc098e"
-uuid = "bf4720bc-e11a-5d0c-854e-bdca1663c893"
-version = "0.1.0"
-
 [[Automa]]
 deps = ["Printf", "ScanByte", "TranscodingStreams"]
 git-tree-sha1 = "d50976f217489ce799e366d9561d56a98a30d7fe"
@@ -222,18 +336,6 @@ version = "1.0.0"
 
 [[Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
-
-[[BinDeps]]
-deps = ["Libdl", "Pkg", "SHA", "URIParser", "Unicode"]
-git-tree-sha1 = "1289b57e8cf019aede076edab0587eb9644175bd"
-uuid = "9e28174c-4ba2-5203-b857-d8d62c4213ee"
-version = "1.0.2"
-
-[[Blink]]
-deps = ["Base64", "BinDeps", "Distributed", "JSExpr", "JSON", "Lazy", "Logging", "MacroTools", "Mustache", "Mux", "Reexport", "Sockets", "WebIO", "WebSockets"]
-git-tree-sha1 = "08d0b679fd7caa49e2bca9214b131289e19808c0"
-uuid = "ad839575-38b3-5650-b840-f874b8c74a25"
-version = "0.12.5"
 
 [[Bzip2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -448,9 +550,6 @@ git-tree-sha1 = "0f5e8d0cb91a6386ba47bd1527b240bd5725fbae"
 uuid = "48062228-2e41-5def-b9a4-89aafe57970f"
 version = "0.9.10"
 
-[[FileWatching]]
-uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
-
 [[FillArrays]]
 deps = ["LinearAlgebra", "Random", "SparseArrays"]
 git-tree-sha1 = "ff537e5a3cba92fb48f30fec46723510450f2c0e"
@@ -499,12 +598,6 @@ git-tree-sha1 = "aa31987c2ba8704e23c6c8ba8a4f769d5d7e4f91"
 uuid = "559328eb-81f9-559d-9380-de523a88c83c"
 version = "1.0.10+0"
 
-[[FunctionalCollections]]
-deps = ["Test"]
-git-tree-sha1 = "04cb9cfaa6ba5311973994fe3496ddec19b6292a"
-uuid = "de31a74c-ac4f-5751-b3fd-e18cd04993ca"
-version = "0.5.0"
-
 [[Future]]
 deps = ["Random"]
 uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
@@ -550,23 +643,11 @@ git-tree-sha1 = "53bb909d1151e57e2484c3d1b53e19552b887fb2"
 uuid = "42e2da0e-8278-4e71-bc24-59509adca0fe"
 version = "1.0.2"
 
-[[HTTP]]
-deps = ["Base64", "Dates", "IniFile", "Logging", "MbedTLS", "NetworkOptions", "Sockets", "URIs"]
-git-tree-sha1 = "60ed5f1643927479f845b0135bb369b031b541fa"
-uuid = "cd3eb016-35fb-5094-929b-558a96fad6f3"
-version = "0.9.14"
-
 [[HarfBuzz_jll]]
 deps = ["Artifacts", "Cairo_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "Graphite2_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg"]
 git-tree-sha1 = "8a954fed8ac097d5be04921d595f741115c1b2ad"
 uuid = "2e76f6c2-a576-52d4-95c1-20adfe4de566"
 version = "2.8.1+0"
-
-[[Hiccup]]
-deps = ["MacroTools", "Test"]
-git-tree-sha1 = "6187bb2d5fcbb2007c39e7ac53308b0d371124bd"
-uuid = "9fb69e20-1954-56bb-a84f-559cc56a8ff7"
-version = "0.2.2"
 
 [[IfElse]]
 git-tree-sha1 = "28e837ff3e7a6c3cdb252ce49fb412c8eb3caeef"
@@ -589,12 +670,6 @@ version = "0.4.1"
 git-tree-sha1 = "012e604e1c7458645cb8b436f8fba789a51b257f"
 uuid = "9b13fd28-a010-5f03-acff-a1bbcff69959"
 version = "1.0.0"
-
-[[IniFile]]
-deps = ["Test"]
-git-tree-sha1 = "098e4d2c533924c921f9f9847274f2ad89e018b8"
-uuid = "83e8ac13-25f8-5344-8a64-a9f2b223428f"
-version = "0.5.0"
 
 [[IntelOpenMP_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -650,23 +725,11 @@ git-tree-sha1 = "642a199af8b68253517b80bd3bfd17eb4e84df6e"
 uuid = "692b3bcd-3c85-4b1f-b108-f13ce0eb3210"
 version = "1.3.0"
 
-[[JSExpr]]
-deps = ["JSON", "MacroTools", "Observables", "WebIO"]
-git-tree-sha1 = "bd6c034156b1e7295450a219c4340e32e50b08b1"
-uuid = "97c1335a-c9c5-57fe-bc5d-ec35cebe8660"
-version = "0.5.3"
-
 [[JSON]]
 deps = ["Dates", "Mmap", "Parsers", "Unicode"]
 git-tree-sha1 = "8076680b162ada2a031f707ac7b4953e30667a37"
 uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 version = "0.21.2"
-
-[[Kaleido_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "2ef87eeaa28713cb010f9fb0be288b6c1a4ecd53"
-uuid = "f7e6163d-2fa5-5f23-b69c-1db539e41963"
-version = "0.1.0+0"
 
 [[KernelDensity]]
 deps = ["Distributions", "DocStringExtensions", "FFTW", "Interpolations", "StatsBase"]
@@ -690,12 +753,6 @@ version = "2.10.1+0"
 git-tree-sha1 = "c7f1c695e06c01b95a67f0cd1d34994f3e7db104"
 uuid = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 version = "1.2.1"
-
-[[Lazy]]
-deps = ["MacroTools"]
-git-tree-sha1 = "1370f8202dac30758f3c345f9909b97f53d87d3f"
-uuid = "50d2b5c4-7a5e-59d5-8109-a42b560f39c0"
-version = "0.15.1"
 
 [[LazyArtifacts]]
 deps = ["Artifacts", "Pkg"]
@@ -807,12 +864,6 @@ git-tree-sha1 = "69b565c0ca7bf9dae18498b52431f854147ecbf3"
 uuid = "0a4f8689-d25c-4efe-a92b-7142dfc1aa53"
 version = "0.1.2"
 
-[[MbedTLS]]
-deps = ["Dates", "MbedTLS_jll", "Random", "Sockets"]
-git-tree-sha1 = "1c38e51c3d08ef2278062ebceade0e46cefc96fe"
-uuid = "739be429-bea8-5141-9913-cc70e7f3736d"
-version = "1.0.3"
-
 [[MbedTLS_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "c8ffd9c3-330d-5841-b78e-0817d7145fa1"
@@ -834,18 +885,6 @@ version = "0.3.3"
 
 [[MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
-
-[[Mustache]]
-deps = ["Printf", "Tables"]
-git-tree-sha1 = "36995ef0d532fe08119d70b2365b7b03d4e00f48"
-uuid = "ffc61752-8dc7-55ee-8c37-f3e9cdd09e70"
-version = "1.0.10"
-
-[[Mux]]
-deps = ["AssetRegistry", "Base64", "HTTP", "Hiccup", "Pkg", "Sockets", "WebSockets"]
-git-tree-sha1 = "82dfb2cead9895e10ee1b0ca37a01088456c4364"
-uuid = "a975b10e-0019-58db-a62f-e48ff68538c9"
-version = "0.7.6"
 
 [[NaNMath]]
 git-tree-sha1 = "bfe47e760d60b82b66b61d2d44128b62e3a369fb"
@@ -937,23 +976,11 @@ git-tree-sha1 = "9bc1871464b12ed19297fbc56c4fb4ba84988b0d"
 uuid = "36c8627f-9965-5494-a995-c6b170f724f3"
 version = "1.47.0+0"
 
-[[Parameters]]
-deps = ["OrderedCollections", "UnPack"]
-git-tree-sha1 = "2276ac65f1e236e0a6ea70baff3f62ad4c625345"
-uuid = "d96e819e-fc66-5662-9728-84c9c7592b0a"
-version = "0.12.2"
-
 [[Parsers]]
 deps = ["Dates"]
 git-tree-sha1 = "438d35d2d95ae2c5e8780b330592b6de8494e779"
 uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
 version = "2.0.3"
-
-[[Pidfile]]
-deps = ["FileWatching", "Test"]
-git-tree-sha1 = "1be8660b2064893cd2dae4bd004b589278e4440d"
-uuid = "fa939f87-e72e-5be4-a000-7fc836dbe307"
-version = "1.2.0"
 
 [[Pixman_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -970,18 +997,6 @@ deps = ["ColorSchemes", "Colors", "Dates", "Printf", "Random", "Reexport", "Stat
 git-tree-sha1 = "9ff1c70190c1c30aebca35dc489f7411b256cd23"
 uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
 version = "1.0.13"
-
-[[PlotlyBase]]
-deps = ["ColorSchemes", "Dates", "DelimitedFiles", "DocStringExtensions", "JSON", "LaTeXStrings", "Logging", "Parameters", "Pkg", "REPL", "Requires", "Statistics", "UUIDs"]
-git-tree-sha1 = "7eb4ec38e1c4e00fea999256e9eb11ee7ede0c69"
-uuid = "a03496cd-edff-5a9b-9e67-9cda94a718b5"
-version = "0.8.16"
-
-[[PlotlyJS]]
-deps = ["Base64", "Blink", "DelimitedFiles", "JSExpr", "JSON", "Kaleido_jll", "Markdown", "Pkg", "PlotlyBase", "REPL", "Reexport", "Requires", "WebIO"]
-git-tree-sha1 = "ec6bc7270269be2d565b272116ca74ca2f8bd9ab"
-uuid = "f0f68f2c-4968-5e81-91da-67840de0976a"
-version = "0.18.7"
 
 [[PolygonOps]]
 git-tree-sha1 = "c031d2332c9a8e1c90eca239385815dc271abb22"
@@ -1190,25 +1205,9 @@ git-tree-sha1 = "216b95ea110b5972db65aa90f88d8d89dcb8851c"
 uuid = "3bb67fe8-82b1-5028-8e26-92a6c54297fa"
 version = "0.9.6"
 
-[[URIParser]]
-deps = ["Unicode"]
-git-tree-sha1 = "53a9f49546b8d2dd2e688d216421d050c9a31d0d"
-uuid = "30578b45-9adc-5946-b283-645ec420af67"
-version = "0.4.1"
-
-[[URIs]]
-git-tree-sha1 = "97bbe755a53fe859669cd907f2d96aee8d2c1355"
-uuid = "5c2747f8-b7ea-4ff2-ba2e-563bfd36b1d4"
-version = "1.3.0"
-
 [[UUIDs]]
 deps = ["Random", "SHA"]
 uuid = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
-
-[[UnPack]]
-git-tree-sha1 = "387c1f73762231e86e0c9c5443ce3b4a0a9a0c2b"
-uuid = "3a884ed6-31ef-47d7-9d2a-63182c4928ed"
-version = "1.0.2"
 
 [[Unicode]]
 uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
@@ -1224,24 +1223,6 @@ deps = ["DataAPI", "Parsers", "Random", "Serialization", "Test"]
 git-tree-sha1 = "4cd606838f91a9c3c7404df41173e132bdb09e82"
 uuid = "ea10d353-3f73-51f8-a26c-33c1cb351aa5"
 version = "1.2.2"
-
-[[WebIO]]
-deps = ["AssetRegistry", "Base64", "Distributed", "FunctionalCollections", "JSON", "Logging", "Observables", "Pkg", "Random", "Requires", "Sockets", "UUIDs", "WebSockets", "Widgets"]
-git-tree-sha1 = "adc25e225bc334c7df6eec3b39496edfc451cc38"
-uuid = "0f1e0344-ec1d-5b48-a673-e5cf874b6c29"
-version = "0.8.15"
-
-[[WebSockets]]
-deps = ["Base64", "Dates", "HTTP", "Logging", "Sockets"]
-git-tree-sha1 = "f91a602e25fe6b89afc93cf02a4ae18ee9384ce3"
-uuid = "104b5d7c-a370-577a-8038-80a2059c5097"
-version = "1.5.9"
-
-[[Widgets]]
-deps = ["Colors", "Dates", "Observables", "OrderedCollections"]
-git-tree-sha1 = "eae2fbbc34a79ffd57fb4c972b08ce50b8f6a00d"
-uuid = "cc8bc4a8-27d6-5769-a93b-9d913e69aa62"
-version = "0.6.3"
 
 [[WoodburyMatrices]]
 deps = ["LinearAlgebra", "SparseArrays"]
@@ -1382,10 +1363,24 @@ version = "3.5.0+0"
 # ╠═b27c2aa6-6fc7-42ae-a3f9-c4506b459c31
 # ╠═83626e13-14a0-4564-a4f2-3048e0d3c835
 # ╠═996ee20e-aac0-4a9c-a121-a1c22bd44092
+# ╠═c7bc1e03-015b-466f-8fb6-f4ac1b9e48ff
+# ╠═dff4d682-6b8a-407e-9af4-b6d78a383ffc
 # ╠═a74b40e3-155d-492c-b034-ccf92f089c90
 # ╠═ee5dd544-44aa-47f9-b8c8-c1eba9c3f49f
 # ╠═f3715524-4be0-4108-994b-70dbe4062ae1
+# ╠═646f9fa3-f59d-466e-90fa-bc3e880a02a7
 # ╠═0183a194-b1e0-4807-8fd0-1425e23a98d4
 # ╠═4946022c-c436-4571-88b9-3ece72e8d054
+# ╠═58417bc5-7f4a-4c13-8617-b15c89c42996
+# ╠═e293665c-28e5-454f-acaf-f60becac170e
+# ╠═2642933d-6694-4aa5-9115-87fb8e6ea95a
+# ╠═9f6fbac8-ac64-492b-8056-363cb5b54e89
+# ╠═7216aa88-9d78-4f93-83bd-2be7c869dc6d
+# ╠═6805f505-e96c-4626-b711-f9cee8b79fbf
+# ╠═21557297-2cef-41d8-92d5-664c8c6838d9
+# ╠═a0732466-545a-485f-ba2e-34fe1c4f88e5
+# ╠═4443eb49-cebc-42eb-bba5-0b7236bf2d09
+# ╠═53635928-b5c0-4ce6-a5a5-a3c4b2d90a48
+# ╠═0a2e57eb-d882-406c-94a7-86f04b0ceec2
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
